@@ -3,20 +3,22 @@ package main
 import (
 	"errors"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
 
 type todo struct {
-	ID        string `json:"id"`
-	Item      string `json:"item"`
-	Completed bool   `json:"completed"`
+	ID        string    `json:"id"`
+	Item      string    `json:"item"`
+	Completed bool      `json:"completed"`
+	CreatedAt time.Time `json:"time"`
 }
 
 var todos = []todo{
-	{ID: "1", Item: "Study to exam", Completed: false},
-	{ID: "2", Item: "Make bed", Completed: false},
-	{ID: "3", Item: "Read the Bible", Completed: false},
+	{ID: "1", Item: "Study to exam", Completed: false, CreatedAt: time.Now()},
+	{ID: "2", Item: "Make bed", Completed: false, CreatedAt: time.Now()},
+	{ID: "3", Item: "Read the Bible", Completed: false, CreatedAt: time.Now()},
 }
 
 func getTodos(context *gin.Context) {
@@ -30,6 +32,7 @@ func addTodo(context *gin.Context) {
 		return
 	}
 
+	newTodo.CreatedAt = time.Now()
 	todos = append(todos, newTodo)
 
 	context.IndentedJSON(http.StatusCreated, newTodo)
